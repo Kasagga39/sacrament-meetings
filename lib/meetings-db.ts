@@ -1,4 +1,4 @@
-import { neon } from '@neondatabase/serverless';
+import { neon, type NeonQueryFunction } from '@neondatabase/serverless';
 import type { SacramentMeeting } from './types';
 
 export const DEFAULT_PAGE_SIZE = 5;
@@ -19,9 +19,9 @@ export interface MeetingListResult {
 }
 
 const connectionString = process.env.DATABASE_URL;
-let cachedSql: ReturnType<typeof neon> | undefined;
+let cachedSql: NeonQueryFunction<false, false> | undefined;
 
-function getSql(): ReturnType<typeof neon> {
+function getSql(): NeonQueryFunction<false, false> {
   if (!connectionString) {
     throw new Error('DATABASE_URL is not set. Run `vercel env pull .env.local` first.');
   }
@@ -152,7 +152,7 @@ export async function getMeetings(options: MeetingQuery = {}): Promise<MeetingLi
   `;
 
   return {
-    meetings: rows.map(mapMeetingRow),
+    meetings: rows.map((row) => mapMeetingRow(row as MeetingRow)),
     total,
     page,
     pageSize,
@@ -184,7 +184,7 @@ export async function getMeetingById(id: number): Promise<SacramentMeeting | und
     LIMIT 1
   `;
 
-  return rows.length > 0 ? mapMeetingRow(rows[0]) : undefined;
+  return rows.length > 0 ? mapMeetingRow(rows[0] as MeetingRow) : undefined;
 }
 
 export function getMostRecentSunday(now: Date = new Date()): string {
@@ -226,7 +226,7 @@ export async function getCurrentMeeting(now: Date = new Date()): Promise<Sacrame
     LIMIT 1
   `;
   if (mostRecentPast.length > 0) {
-    return mapMeetingRow(mostRecentPast[0]);
+    return mapMeetingRow(mostRecentPast[0] as MeetingRow);
   }
 
   const first = await sql`
@@ -249,22 +249,22 @@ export async function getCurrentMeeting(now: Date = new Date()): Promise<Sacrame
     ORDER BY date ASC, id ASC
     LIMIT 1
   `;
-  return first.length > 0 ? mapMeetingRow(first[0]) : undefined;
+  return first.length > 0 ? mapMeetingRow(first[0] as MeetingRow) : undefined;
 }
 
 export async function addMeeting(
-  _meeting: Omit<SacramentMeeting, 'id'>,
+  meeting: Omit<SacramentMeeting, 'id'>,
 ): Promise<SacramentMeeting> {
-  throw new Error('addMeeting will be implemented in Week 04.');
+  throw new Error(`addMeeting is not implemented yet (meeting on ${meeting.date}).`);
 }
 
 export async function updateMeeting(
-  _id: number,
-  _updates: Partial<Omit<SacramentMeeting, 'id'>>,
+  id: number,
+  updates: Partial<Omit<SacramentMeeting, 'id'>>,
 ): Promise<SacramentMeeting> {
-  throw new Error('updateMeeting will be implemented in Week 04.');
+  throw new Error(`updateMeeting is not implemented yet (meeting ${id}, ${Object.keys(updates).length} change(s)).`);
 }
 
-export async function deleteMeeting(_id: number): Promise<boolean> {
-  throw new Error('deleteMeeting will be implemented in Week 04.');
+export async function deleteMeeting(id: number): Promise<boolean> {
+  throw new Error(`deleteMeeting is not implemented yet (meeting ${id}).`);
 }
