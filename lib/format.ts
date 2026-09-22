@@ -19,5 +19,7 @@ export function meetingTypeLabel(meetingType: MeetingType): string {
       return 'Stake Conference';
     case 'general':
       return 'General Conference';
+    case 'special':
+      return 'Special Meeting';
   }
 }

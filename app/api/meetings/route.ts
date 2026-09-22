@@ -3,7 +3,7 @@ import { getMeetings } from '@/lib/meetings-db';
 
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
-export function GET(request: NextRequest) {
+export async function GET(request: NextRequest) {
   const date = request.nextUrl.searchParams.get('date');
 
   if (date !== null && !DATE_PATTERN.test(date)) {
@@ -13,5 +13,6 @@ export function GET(request: NextRequest) {
     );
   }
 
-  return NextResponse.json(getMeetings(date ?? undefined));
+  const { meetings } = await getMeetings({ date: date ?? undefined });
+  return NextResponse.json(meetings);
 }

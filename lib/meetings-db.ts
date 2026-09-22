@@ -1,162 +1,51 @@
+import { neon } from '@neondatabase/serverless';
 import type { SacramentMeeting } from './types';
 
-const meetings: SacramentMeeting[] = [
-  {
-    id: 1,
-    date: '2026-09-13',
-    meetingType: 'regular',
-    presiding: 'Bishop Mark Taylor',
-    conducting: 'Brother Alex Johnson',
-    announcements: [
-      'Stake Temple Night is this Tuesday at 7:00 PM.',
-      'Sign-ups for the ward service project close after sacrament meeting.',
-      'New-member welcome dinner next Sunday at the meetinghouse.',
-    ],
-    openingHymn: { number: 134, title: 'I Know That My Redeemer Lives' },
-    openingPrayer: 'Sister Rachel Adams',
-    wardBusiness: [
-      { description: 'Sustaining of Brother Paul Nguyen as ward missionary leader.' },
-      { description: 'Reminder to renew temple recommends with the bishopric after the meeting.' },
-    ],
-    stakeBusiness: false,
-    sacramentHymn: { number: 184, title: 'Upon the Cross of Calvary' },
-    speakers: [
-      { name: 'Bishop Mark Taylor', topic: 'The Atonement of Jesus Christ', type: 'speaker' },
-      { name: 'Ward Choir', topic: 'When I Survey the Wondrous Cross', type: 'musical-number' },
-      { name: 'Sister Olivia Bennett', topic: 'Living the Gospel Daily', type: 'speaker' },
-    ],
-    closingHymn: { number: 193, title: 'I Stand All Amazed' },
-    closingPrayer: 'Brother Ethan Wood',
-  },
-  {
-    id: 2,
-    date: '2026-09-06',
-    meetingType: 'testimony',
-    presiding: 'Bishop Mark Taylor',
-    conducting: 'Brother David Hansen',
-    announcements: [
-      'First Sunday of the month: members are invited to share their testimonies.',
-      'The youth fund-raising car wash will be held Saturday at 9:00 AM.',
-    ],
-    openingHymn: { number: 297, title: 'From All That Dwell Below the Skies' },
-    openingPrayer: 'Sister Aria Patel',
-    wardBusiness: [
-      { description: 'Announcement of the September ward council date change.' },
-    ],
-    stakeBusiness: false,
-    sacramentHymn: { number: 173, title: 'While of These Emblems We Partake' },
-    speakers: [],
-    closingHymn: { number: 103, title: 'Praise to the Lord, the Almighty' },
-    closingPrayer: 'Brother Leo Carter',
-  },
-  {
-    id: 3,
-    date: '2026-08-30',
-    meetingType: 'regular',
-    presiding: 'Bishop Mark Taylor',
-    conducting: 'Sister Hannah Brooks',
-    announcements: [
-      'Church-wide Sunday School class begins at 9:30 AM next week.',
-      'Ward picnic is scheduled for September 5th at Cherry Park.',
-    ],
-    openingHymn: { number: 2, title: 'The Spirit of God' },
-    openingPrayer: 'Brother Miguel Torres',
-    wardBusiness: [
-      { description: 'Sustaining of a new Sunday School teacher, Sister Kim Nguyen.' },
-    ],
-    stakeBusiness: false,
-    sacramentHymn: { number: 172, title: 'In Humility, Our Savior' },
-    speakers: [
-      { name: 'Brother Noah Green', topic: 'Personal Prayer', type: 'speaker' },
-      { name: 'Sister Hannah Brooks', topic: 'Be Still, My Soul', type: 'musical-number' },
-      { name: 'Sister Rebecca Foster', topic: 'Families and Scripture Study', type: 'speaker' },
-    ],
-    closingHymn: { number: 140, title: 'Did You Think to Pray?' },
-    closingPrayer: 'Brother Ethan Wood',
-  },
-  {
-    id: 4,
-    date: '2026-08-23',
-    meetingType: 'stake',
-    presiding: 'Stake President Robert Bennett',
-    conducting: 'Brother James Allred, Second Counselor',
-    announcements: [
-      'Stake conference broadcast recordings are available in the library.',
-    ],
-    openingHymn: { number: 3, title: 'Now Let Us Rejoice' },
-    openingPrayer: 'Sister Abigail Stone',
-    wardBusiness: [],
-    stakeBusiness: true,
-    sacramentHymn: { number: 184, title: 'Upon the Cross of Calvary' },
-    speakers: [
-      { name: 'Elder Scott Richards', topic: 'Discipleship in Everyday Life', type: 'speaker' },
-      { name: 'Stake Choir', topic: 'Come, Come, Ye Saints', type: 'musical-number' },
-      { name: 'Sister Amy Chen', topic: 'Building the Lord’s Kingdom', type: 'speaker' },
-      { name: 'Stake President Robert Bennett', topic: 'Counsel for Our Stake', type: 'speaker' },
-    ],
-    closingHymn: { number: 105, title: 'Master, the Tempest Is Raging' },
-    closingPrayer: 'Brother Miguel Torres',
-  },
-  {
-    id: 5,
-    date: '2026-08-16',
-    meetingType: 'regular',
-    presiding: 'Bishop Mark Taylor',
-    conducting: 'Brother Alex Johnson',
-    announcements: [
-      'Stake temple night is Tuesday at 7:00 PM.',
-      'Come prepared to share your thoughts on the youth fundraiser at next week’s council.',
-    ],
-    openingHymn: { number: 1, title: 'The Morning Breaks' },
-    openingPrayer: 'Sister Emily Carter',
-    wardBusiness: [
-      { description: 'Sustaining of Brother Samuel Diaz as a new ward clerk.' },
-    ],
-    stakeBusiness: false,
-    sacramentHymn: { number: 185, title: 'Reverently and Meekly Now' },
-    speakers: [
-      { name: 'Brother Samuel Diaz', topic: 'Faith in Jesus Christ', type: 'speaker' },
-      { name: 'Ward Choir', topic: 'Nearer, My God, to Thee', type: 'musical-number' },
-      { name: 'Sister Grace Miller', topic: 'Trusting in the Lord’s Timing', type: 'speaker' },
-      { name: 'Brother Jonathan Wells', topic: 'Service as an Expression of Love', type: 'speaker' },
-    ],
-    closingHymn: { number: 200, title: 'Count Your Blessings' },
-    closingPrayer: 'Brother David Hansen',
-  },
-  {
-    id: 6,
-    date: '2026-10-04',
-    meetingType: 'general',
-    presiding: 'A Member of the First Presidency',
-    conducting: 'A Member of the First Presidency',
-    announcements: [
-      'General conference sessions will be broadcast at the meetinghouse at 10:00 AM and 2:00 PM.',
-      'Priority seating for visitors will be reserved in the cultural hall.',
-    ],
-    openingHymn: { number: 2, title: 'The Spirit of God' },
-    openingPrayer: 'Sister Hannah Brooks',
-    wardBusiness: [],
-    stakeBusiness: false,
-    sacramentHymn: { number: 194, title: 'There Is a Green Hill Far Away' },
-    speakers: [
-      { name: 'A Member of the Quorum of the Twelve Apostles', topic: 'The Book of Mormon: Another Testament of Jesus Christ', type: 'speaker' },
-      { name: 'General Conference Choir', topic: 'Medley of Praise', type: 'musical-number' },
-      { name: 'A Member of the Seventy', topic: 'Counsel for the Modern World', type: 'speaker' },
-    ],
-    closingHymn: { number: 105, title: 'Master, the Tempest Is Raging' },
-    closingPrayer: 'Brother James Keller',
-  },
-];
+export const DEFAULT_PAGE_SIZE = 5;
 
-export function getMeetings(date?: string): SacramentMeeting[] {
-  if (!date) {
-    return meetings;
-  }
-  return meetings.filter((meeting) => meeting.date === date);
+export interface MeetingQuery {
+  date?: string;
+  query?: string;
+  page?: number;
+  pageSize?: number;
 }
 
-export function getMeetingById(id: number): SacramentMeeting | undefined {
-  return meetings.find((meeting) => meeting.id === id);
+export interface MeetingListResult {
+  meetings: SacramentMeeting[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+}
+
+const connectionString = process.env.DATABASE_URL;
+let cachedSql: ReturnType<typeof neon> | undefined;
+
+function getSql(): ReturnType<typeof neon> {
+  if (!connectionString) {
+    throw new Error('DATABASE_URL is not set. Run `vercel env pull .env.local` first.');
+  }
+  if (!cachedSql) {
+    cachedSql = neon(connectionString);
+  }
+  return cachedSql;
+}
+
+interface MeetingRow {
+  id: number;
+  date: Date | string;
+  meeting_type: SacramentMeeting['meetingType'];
+  presiding: string;
+  conducting: string;
+  announcements: string[] | null;
+  opening_hymn: SacramentMeeting['openingHymn'];
+  opening_prayer: string;
+  ward_business: SacramentMeeting['wardBusiness'] | null;
+  stake_business: boolean;
+  sacrament_hymn: SacramentMeeting['sacramentHymn'];
+  speakers: SacramentMeeting['speakers'] | null;
+  closing_hymn: SacramentMeeting['closingHymn'];
+  closing_prayer: string;
 }
 
 function toISODate(date: Date): string {
@@ -166,6 +55,138 @@ function toISODate(date: Date): string {
   return `${year}-${month}-${day}`;
 }
 
+function toDateString(value: Date | string): string {
+  if (value instanceof Date && !Number.isNaN(value.getTime())) {
+    return toISODate(value);
+  }
+  return String(value).slice(0, 10);
+}
+
+function mapMeetingRow(row: MeetingRow): SacramentMeeting {
+  return {
+    id: row.id,
+    date: toDateString(row.date),
+    meetingType: row.meeting_type,
+    presiding: row.presiding,
+    conducting: row.conducting,
+    announcements: row.announcements ?? [],
+    openingHymn: row.opening_hymn,
+    openingPrayer: row.opening_prayer,
+    wardBusiness: row.ward_business ?? [],
+    stakeBusiness: row.stake_business,
+    sacramentHymn: row.sacrament_hymn,
+    speakers: row.speakers ?? [],
+    closingHymn: row.closing_hymn,
+    closingPrayer: row.closing_prayer,
+  };
+}
+
+function normalizePage(page: number | undefined, totalPages: number): number {
+  if (!page || page < 1) {
+    return 1;
+  }
+  return Math.min(page, Math.max(1, totalPages));
+}
+
+export async function getMeetings(options: MeetingQuery = {}): Promise<MeetingListResult> {
+  const sql = getSql();
+
+  const { date, query } = options;
+  const pageSize = Math.max(1, options.pageSize ?? DEFAULT_PAGE_SIZE);
+  const pattern = query ? `%${query}%` : null;
+
+  const [{ count }] = await sql`
+    SELECT COUNT(*)::int AS count
+    FROM meetings
+    WHERE (${date ?? null}::date IS NULL OR date = ${date ?? null})
+      AND (
+        ${pattern}::text IS NULL
+        OR presiding ILIKE ${pattern}
+        OR conducting ILIKE ${pattern}
+        OR meeting_type ILIKE ${pattern}
+        OR EXISTS (
+          SELECT 1
+          FROM jsonb_array_elements(speakers) AS speaker
+          WHERE speaker->>'name' ILIKE ${pattern}
+        )
+      )
+  `;
+
+  const total = count;
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  const page = normalizePage(options.page, totalPages);
+  const offset = (page - 1) * pageSize;
+
+  const rows = await sql`
+    SELECT
+      id,
+      date,
+      meeting_type,
+      presiding,
+      conducting,
+      announcements,
+      opening_hymn,
+      opening_prayer,
+      ward_business,
+      stake_business,
+      sacrament_hymn,
+      speakers,
+      closing_hymn,
+      closing_prayer
+    FROM meetings
+    WHERE (${date ?? null}::date IS NULL OR date = ${date ?? null})
+      AND (
+        ${pattern}::text IS NULL
+        OR presiding ILIKE ${pattern}
+        OR conducting ILIKE ${pattern}
+        OR meeting_type ILIKE ${pattern}
+        OR EXISTS (
+          SELECT 1
+          FROM jsonb_array_elements(speakers) AS speaker
+          WHERE speaker->>'name' ILIKE ${pattern}
+        )
+      )
+    ORDER BY date DESC, id DESC
+    LIMIT ${pageSize}
+    OFFSET ${offset}
+  `;
+
+  return {
+    meetings: rows.map(mapMeetingRow),
+    total,
+    page,
+    pageSize,
+    totalPages,
+  };
+}
+
+export async function getMeetingById(id: number): Promise<SacramentMeeting | undefined> {
+  const sql = getSql();
+
+  const rows = await sql`
+    SELECT
+      id,
+      date,
+      meeting_type,
+      presiding,
+      conducting,
+      announcements,
+      opening_hymn,
+      opening_prayer,
+      ward_business,
+      stake_business,
+      sacrament_hymn,
+      speakers,
+      closing_hymn,
+      closing_prayer
+    FROM meetings
+    WHERE id = ${id}
+    LIMIT 1
+  `;
+
+  return rows.length > 0 ? mapMeetingRow(rows[0]) : undefined;
+}
+
 export function getMostRecentSunday(now: Date = new Date()): string {
   const date = new Date(now);
   date.setHours(0, 0, 0, 0);
@@ -173,22 +194,77 @@ export function getMostRecentSunday(now: Date = new Date()): string {
   return toISODate(date);
 }
 
-export function getCurrentMeeting(now: Date = new Date()): SacramentMeeting | undefined {
+export async function getCurrentMeeting(now: Date = new Date()): Promise<SacramentMeeting | undefined> {
+  const sql = getSql();
+
   const sunday = getMostRecentSunday(now);
-  const onSunday = getMeetings(sunday);
-  if (onSunday.length > 0) {
-    return onSunday[0];
+  const onSunday = await getMeetings({ date: sunday });
+  if (onSunday.meetings.length > 0) {
+    return onSunday.meetings[0];
   }
 
   const today = toISODate(new Date(now));
-  const mostRecentPast = meetings
-    .filter((meeting) => meeting.date <= today)
-    .sort((a, b) => b.date.localeCompare(a.date));
+  const mostRecentPast = await sql`
+    SELECT
+      id,
+      date,
+      meeting_type,
+      presiding,
+      conducting,
+      announcements,
+      opening_hymn,
+      opening_prayer,
+      ward_business,
+      stake_business,
+      sacrament_hymn,
+      speakers,
+      closing_hymn,
+      closing_prayer
+    FROM meetings
+    WHERE date <= ${today}
+    ORDER BY date DESC, id DESC
+    LIMIT 1
+  `;
   if (mostRecentPast.length > 0) {
-    return mostRecentPast[0];
+    return mapMeetingRow(mostRecentPast[0]);
   }
 
-  return meetings
-    .slice()
-    .sort((a, b) => a.date.localeCompare(b.date))[0];
+  const first = await sql`
+    SELECT
+      id,
+      date,
+      meeting_type,
+      presiding,
+      conducting,
+      announcements,
+      opening_hymn,
+      opening_prayer,
+      ward_business,
+      stake_business,
+      sacrament_hymn,
+      speakers,
+      closing_hymn,
+      closing_prayer
+    FROM meetings
+    ORDER BY date ASC, id ASC
+    LIMIT 1
+  `;
+  return first.length > 0 ? mapMeetingRow(first[0]) : undefined;
+}
+
+export async function addMeeting(
+  _meeting: Omit<SacramentMeeting, 'id'>,
+): Promise<SacramentMeeting> {
+  throw new Error('addMeeting will be implemented in Week 04.');
+}
+
+export async function updateMeeting(
+  _id: number,
+  _updates: Partial<Omit<SacramentMeeting, 'id'>>,
+): Promise<SacramentMeeting> {
+  throw new Error('updateMeeting will be implemented in Week 04.');
+}
+
+export async function deleteMeeting(_id: number): Promise<boolean> {
+  throw new Error('deleteMeeting will be implemented in Week 04.');
 }
