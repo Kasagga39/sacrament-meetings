@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import PrintButton from './PrintButton';
 import { formatLongDate, meetingTypeLabel } from '@/lib/format';
 import type { SacramentMeeting } from '@/lib/types';
@@ -125,8 +126,14 @@ export default function MeetingDetail({ meeting }: { meeting: SacramentMeeting }
         </ol>
       </div>
 
-      <div className="no-print px-6 pb-6 sm:px-8">
+      <div className="no-print flex flex-wrap items-center gap-3 px-6 pb-6 sm:px-8">
         <PrintButton />
+        <Link
+          href={`/meetings/${meeting.id}/edit`}
+          className="inline-flex items-center justify-center rounded-lg border border-primary px-4 py-2 text-sm font-semibold text-primary transition-colors hover:bg-primary/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+        >
+          Edit meeting
+        </Link>
       </div>
     </article>
   );

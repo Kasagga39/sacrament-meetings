@@ -22,6 +22,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 New Meeting
               </Link>
             </li>
+            <li>
+              <Link
+                href="/meetings"
+                className="rounded-full border border-primary px-4 py-1.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              >
+                All Meetings
+              </Link>
+            </li>
           </ul>
         </nav>
       </header>

@@ -36,3 +36,6 @@ export interface SacramentMeeting {
   closingHymn: Hymn;
   closingPrayer: string;
 }
+
+/** Every field of a meeting except its database-generated `id`. */
+export type MeetingInput = Omit<SacramentMeeting, 'id'>;

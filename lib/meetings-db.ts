@@ -1,5 +1,5 @@
 import { neon, type NeonQueryFunction } from '@neondatabase/serverless';
-import type { SacramentMeeting } from './types';
+import type { MeetingInput, SacramentMeeting } from './types';
 
 export const DEFAULT_PAGE_SIZE = 5;
 
@@ -252,19 +252,111 @@ export async function getCurrentMeeting(now: Date = new Date()): Promise<Sacrame
   return first.length > 0 ? mapMeetingRow(first[0] as MeetingRow) : undefined;
 }
 
-export async function addMeeting(
-  meeting: Omit<SacramentMeeting, 'id'>,
-): Promise<SacramentMeeting> {
-  throw new Error(`addMeeting is not implemented yet (meeting on ${meeting.date}).`);
+export async function addMeeting(meeting: MeetingInput): Promise<SacramentMeeting> {
+  const sql = getSql();
+
+  const rows = await sql`
+    INSERT INTO meetings (
+      date,
+      meeting_type,
+      presiding,
+      conducting,
+      announcements,
+      opening_hymn,
+      opening_prayer,
+      ward_business,
+      stake_business,
+      sacrament_hymn,
+      speakers,
+      closing_hymn,
+      closing_prayer
+    )
+    VALUES (
+      ${meeting.date}::date,
+      ${meeting.meetingType},
+      ${meeting.presiding},
+      ${meeting.conducting},
+      ARRAY(SELECT jsonb_array_elements_text(${JSON.stringify(meeting.announcements ?? [])}::jsonb)),
+      ${JSON.stringify(meeting.openingHymn)}::jsonb,
+      ${meeting.openingPrayer},
+      ${JSON.stringify(meeting.wardBusiness ?? [])}::jsonb,
+      ${meeting.stakeBusiness}::boolean,
+      ${JSON.stringify(meeting.sacramentHymn)}::jsonb,
+      ${JSON.stringify(meeting.speakers ?? [])}::jsonb,
+      ${JSON.stringify(meeting.closingHymn)}::jsonb,
+      ${meeting.closingPrayer}
+    )
+    RETURNING
+      id,
+      date,
+      meeting_type,
+      presiding,
+      conducting,
+      announcements,
+      opening_hymn,
+      opening_prayer,
+      ward_business,
+      stake_business,
+      sacrament_hymn,
+      speakers,
+      closing_hymn,
+      closing_prayer
+  `;
+
+  return mapMeetingRow(rows[0] as MeetingRow);
 }
 
 export async function updateMeeting(
   id: number,
-  updates: Partial<Omit<SacramentMeeting, 'id'>>,
-): Promise<SacramentMeeting> {
-  throw new Error(`updateMeeting is not implemented yet (meeting ${id}, ${Object.keys(updates).length} change(s)).`);
+  updates: MeetingInput,
+): Promise<SacramentMeeting | undefined> {
+  const sql = getSql();
+
+  const rows = await sql`
+    UPDATE meetings
+    SET
+      date = ${updates.date}::date,
+      meeting_type = ${updates.meetingType},
+      presiding = ${updates.presiding},
+      conducting = ${updates.conducting},
+      announcements = ARRAY(SELECT jsonb_array_elements_text(${JSON.stringify(updates.announcements ?? [])}::jsonb)),
+      opening_hymn = ${JSON.stringify(updates.openingHymn)}::jsonb,
+      opening_prayer = ${updates.openingPrayer},
+      ward_business = ${JSON.stringify(updates.wardBusiness ?? [])}::jsonb,
+      stake_business = ${updates.stakeBusiness}::boolean,
+      sacrament_hymn = ${JSON.stringify(updates.sacramentHymn)}::jsonb,
+      speakers = ${JSON.stringify(updates.speakers ?? [])}::jsonb,
+      closing_hymn = ${JSON.stringify(updates.closingHymn)}::jsonb,
+      closing_prayer = ${updates.closingPrayer}
+    WHERE id = ${id}
+    RETURNING
+      id,
+      date,
+      meeting_type,
+      presiding,
+      conducting,
+      announcements,
+      opening_hymn,
+      opening_prayer,
+      ward_business,
+      stake_business,
+      sacrament_hymn,
+      speakers,
+      closing_hymn,
+      closing_prayer
+  `;
+
+  return rows.length > 0 ? mapMeetingRow(rows[0] as MeetingRow) : undefined;
 }
 
 export async function deleteMeeting(id: number): Promise<boolean> {
-  throw new Error(`deleteMeeting is not implemented yet (meeting ${id}).`);
+  const sql = getSql();
+
+  const rows = await sql`
+    DELETE FROM meetings
+    WHERE id = ${id}
+    RETURNING id
+  `;
+
+  return rows.length > 0;
 }
