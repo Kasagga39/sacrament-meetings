@@ -1,6 +1,15 @@
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+import { auth } from '@/auth';
+
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  const session = await auth();
+
+  if (!session) {
+    redirect('/login');
+  }
+
   return (
     <div className="mx-auto w-full max-w-4xl flex-1 px-4 py-8 sm:py-10">
       <header className="no-print mb-8">
@@ -9,8 +18,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           Meeting Planner Tools
         </h1>
         <p className="mt-2 text-stone-600">
-          Leader-facing tools for planning and maintaining sacrament meetings.
-          Sign-in and role-based access will be added in Week 05.
+          Leader-facing tools for planning and maintaining sacrament meetings. You are signed in
+          as{' '}
+          <span className="font-semibold text-stone-800">
+            {session.user?.name ?? session.user?.email ?? 'a bishopric member'}
+          </span>
+          .
         </p>
         <nav aria-label="Admin" className="mt-4">
           <ul className="flex flex-wrap items-center gap-2">

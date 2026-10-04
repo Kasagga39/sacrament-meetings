@@ -1,4 +1,6 @@
+import { Suspense } from 'react';
 import Link from 'next/link';
+import AuthNav from './AuthNav';
 import NavLinks from './NavLinks';
 
 const WARD_NAME = 'Springfield 1st Ward';
@@ -21,7 +23,19 @@ export default function Header() {
           <span className="font-serif text-2xl font-bold leading-tight">{WARD_NAME}</span>
           <span className="text-sm text-white/80">{today}</span>
         </Link>
-        <NavLinks />
+        <div className="flex flex-wrap items-center gap-3">
+          <NavLinks />
+          <Suspense
+            fallback={
+              <div
+                aria-hidden="true"
+                className="h-8 w-32 animate-pulse rounded-full bg-white/20"
+              />
+            }
+          >
+            <AuthNav />
+          </Suspense>
+        </div>
       </div>
     </header>
   );

@@ -1,8 +1,15 @@
 import { Suspense } from 'react';
+import type { Metadata } from 'next';
 import MeetingCard from '@/components/MeetingCard';
 import MeetingSearch from '@/components/MeetingSearch';
 import Pagination from '@/components/Pagination';
 import { DEFAULT_PAGE_SIZE, getMeetings } from '@/lib/meetings-db';
+
+export const metadata: Metadata = {
+  title: 'Sacrament Meetings',
+  description:
+    'Browse every sacrament meeting the Springfield 1st Ward has planned, search past agendas, and open a printable program for any Sunday.',
+};
 
 export default async function MeetingsPage(props: PageProps<'/meetings'>) {
   const searchParams = await props.searchParams;

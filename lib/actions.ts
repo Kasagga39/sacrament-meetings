@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
+import { auth } from '@/auth';
 import {
   addMeeting,
   deleteMeeting as deleteMeetingById,
@@ -278,10 +279,25 @@ function revalidateMeetingPaths(id?: number): void {
   }
 }
 
+/**
+ * Authorization for every meeting mutation. Server actions are public
+ * endpoints, so the signed Auth.js session is checked here instead of only in
+ * the UI; an expired or missing session is sent back to the login page.
+ */
+async function requireBishopricSession(): Promise<void> {
+  const session = await auth();
+
+  if (!session) {
+    redirect('/login');
+  }
+}
+
 export async function createMeeting(
   _prevState: MeetingFormState,
   formData: FormData,
 ): Promise<MeetingFormState> {
+  await requireBishopricSession();
+
   const parsed = MeetingFormSchema.safeParse(toRawFormValues(formData));
 
   if (!parsed.success) {
@@ -310,6 +326,8 @@ export async function updateMeeting(
   _prevState: MeetingFormState,
   formData: FormData,
 ): Promise<MeetingFormState> {
+  await requireBishopricSession();
+
   const parsed = MeetingFormSchema.safeParse(toRawFormValues(formData));
 
   if (!parsed.success) {
@@ -349,6 +367,8 @@ export async function deleteMeeting(
   _prevState: DeleteMeetingState,
   formData: FormData,
 ): Promise<DeleteMeetingState> {
+  await requireBishopricSession();
+
   const parsed = DeleteMeetingSchema.safeParse({ id: readText(formData, 'id') });
 
   if (!parsed.success) {
